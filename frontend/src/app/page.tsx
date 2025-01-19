@@ -1,15 +1,17 @@
-import { SideFilter } from "@/components/SideFilter";
-import { Hero } from "@/components/Hero";
+import { OurProduct } from "@/components/main/home/OurProduct";
+import { Hero } from "@/components/main/home/Hero";
+// import { AircraftCompanies } from "@/components/main/home/AircraftCompanies";
+import { AircraftHistory } from "@/components/main/home/AircraftHistory";
+import { NewArrival } from "@/components/main/home/NewArrival";
 
 const Page = () => {
   return (
     <>
-      <div className="container mx-auto py-8 mt-10">
-        <div className="flex justify-center items-start gap-8">
-          <SideFilter />
-          <Hero />
-        </div>
-      </div>
+      <Hero />
+      <OurProduct />
+      <AircraftHistory />
+      <NewArrival />
+      {/* <AircraftCompanies /> */}
     </>
   );
 };

@@ -3,12 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  CiSearch,
-  CiShoppingCart,
-  CiHeart,
-  CiMenuBurger,
-} from "react-icons/ci";
+import { Search, Heart, ShoppingCart, User, Menu, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -19,20 +14,20 @@ export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <header className="sticky bg-white top-0 z-50 w-full border-b">
+    <header className="sticky bg-white top-0 z-50 w-full border-b shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" aria-label="Home" className="mr-4">
               <Image
                 src="/logo.avif"
-                alt=""
+                alt="Website Logo"
                 width={48}
                 height={48}
                 className="w-12 h-12"
               />
             </Link>
-            <nav className="hidden md:flex space-x-4">
+            <nav className="hidden md:flex space-x-6">
               <NavLink href="/" active={pathname === "/"}>
                 Нүүр
               </NavLink>
@@ -48,29 +43,51 @@ export const Header = () => {
             <div className="hidden md:block relative">
               <Input
                 type="search"
-                placeholder="What are you looking for"
+                placeholder="Хайлт"
                 className="rounded-full w-[220px] pr-10"
                 aria-label="Search"
               />
-              <CiSearch
+              <Search
                 className="w-5 h-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                 aria-hidden="true"
               />
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label="Search"
-              className="md:hidden"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-            >
-              <CiSearch className="h-6 w-6" />
-            </Button>
+            {isSearchOpen ? (
+              <div className="md:hidden flex items-center space-x-2">
+                <Input
+                  type="search"
+                  placeholder="What are you looking for?"
+                  className="rounded-full w-[200px] pr-10"
+                  aria-label="Search"
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Close Search"
+                  onClick={() => setIsSearchOpen(false)}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Open Search"
+                className="md:hidden"
+                onClick={() => setIsSearchOpen(true)}
+              >
+                <Search className="h-5 w-5" />
+              </Button>
+            )}
             <Button variant="ghost" size="icon" aria-label="Favorites">
-              <CiHeart className="h-6 w-6" />
+              <Heart className="h-5 w-5 hover:text-red-400 transition-colors" />
             </Button>
             <Button variant="ghost" size="icon" aria-label="Shopping Cart">
-              <CiShoppingCart className="h-6 w-6" />
+              <ShoppingCart className="h-5 w-5 hover:text-blue-400 transition-colors" />
+            </Button>
+            <Button variant="ghost" size="icon" aria-label="User Account">
+              <User className="h-5 w-5 hover:text-green-400 transition-colors" />
             </Button>
             <Sheet>
               <SheetTrigger asChild>
@@ -80,11 +97,11 @@ export const Header = () => {
                   aria-label="Menu"
                   className="md:hidden"
                 >
-                  <CiMenuBurger className="h-6 w-6" />
+                  <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">
-                <nav className="flex flex-col space-y-4 mt-8">
+                <nav className="flex flex-col space-y-4 mt-8 text-lg">
                   <NavLink href="/" active={pathname === "/"}>
                     Нүүр
                   </NavLink>
@@ -99,16 +116,6 @@ export const Header = () => {
             </Sheet>
           </div>
         </div>
-        {isSearchOpen && (
-          <div className="md:hidden py-2">
-            <Input
-              type="search"
-              placeholder="What are you looking for"
-              className="rounded-full w-full pr-10"
-              aria-label="Search"
-            />
-          </div>
-        )}
       </div>
     </header>
   );
@@ -124,8 +131,8 @@ const NavLink = ({ href, active, children }: NavLinkProps) => (
   <Link
     href={href}
     className={`px-3 py-2 rounded-md transition-colors ${
-      active ? "text-blue-400 " : "hover:text-blue-400"
-    } font-bold`}
+      active ? "text-[#DB4444] font-bold" : "hover:text-[#DB4444]"
+    }`}
   >
     {children}
   </Link>
