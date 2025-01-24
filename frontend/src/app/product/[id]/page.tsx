@@ -1,11 +1,10 @@
 import { ProductDetail } from "@/components/product/ProductDetail";
 
 const getProductDetails = async (id: string) => {
-  // In a real application, you would fetch this data from an API
   return {
     id,
     title: "Airbus A320neo",
-    images: ["/737max.JPG", "/an-24.jpg", "/787F.JPG"],
+    images: ["/737max.JPG", "/placeholder.svg", "/placeholder.svg"],
     price: 3000,
     description:
       "The Airbus A320neo (new engine option) is a narrow-body airliner developed by Airbus. It is the latest generation of the A320 family, offering improved fuel efficiency and reduced operating costs.",

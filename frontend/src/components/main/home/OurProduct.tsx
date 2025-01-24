@@ -1,8 +1,10 @@
 "use client";
+
 import { Chip } from "@/components/utils/Chip";
-import { ProductCard } from "../../common/ProductCard";
-import { Product } from "../../types/ProductType";
-import { Button } from "../../ui/button";
+import { ProductCard } from "@/components/common/ProductCard";
+import { Button } from "@/components/ui/button";
+import { Product } from "@/components/types/ProductType";
+import Link from "next/link";
 
 export const products: Product[] = [
   {
@@ -70,7 +72,7 @@ export const OurProduct = () => {
       aria-labelledby="our-products-heading"
     >
       <div className="flex flex-col items-center space-y-8">
-        <Chip title="Бараа" desc="Манай бараа" />
+        <Chip title="Бараа" desc="Models" />
 
         <div className="flex flex-col space-y-6 w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
@@ -85,9 +87,14 @@ export const OurProduct = () => {
           </div>
         </div>
       </div>
-      <Button className="w-[245px] h-[50px] border-blue-400" variant="outline">
-        See more
-      </Button>
+      <Link href="/shop">
+        <Button
+          className="w-[245px] h-[50px] border-blue-400"
+          variant="outline"
+        >
+          See more
+        </Button>
+      </Link>
     </section>
   );
 };
