@@ -4,8 +4,13 @@ import { AccountSection } from "@/components/utils/AccountSection";
 import { LocationSection } from "@/components/utils/LocationSection";
 import { NewsletterSection } from "@/components/utils/NewsletterSection";
 import { SupportSection } from "@/components/utils/SupportSection";
+import { usePathname } from "next/navigation";
 
 export function Footer() {
+  const pathname = usePathname();
+  if (pathname === "/register" || pathname === "/sign-up") {
+    return null;
+  }
   return (
     <footer className="bg-black text-white">
       <div className="container mx-auto py-12 px-4">

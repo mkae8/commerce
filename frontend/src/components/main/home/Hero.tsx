@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState, useCallback } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const listArray = [
   {
@@ -65,13 +66,15 @@ export const Hero = () => {
               <h2 className="text-[#FAFAFA] text-3xl md:text-5xl font-semibold">
                 {list.sale}
               </h2>
-              <Button
-                variant="link"
-                className="self-start text-[#FAFAFA] p-0 h-auto"
-              >
-                Shop Now
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <Link href="/shop">
+                <Button
+                  variant="link"
+                  className="self-start text-[#FAFAFA] p-0 h-auto"
+                >
+                  Shop Now
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
             <div className="flex-1 relative">
               <Image

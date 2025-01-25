@@ -29,9 +29,9 @@ export default function AuthComponent() {
           value={activeTab}
           onValueChange={(value) => setActiveTab(value as "login" | "signup")}
         >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 ">
+            <TabsTrigger value="login">Нэвтрэх</TabsTrigger>
+            <TabsTrigger value="signup">Бүртгүүлэх</TabsTrigger>
           </TabsList>
           <TabsContent value="login">
             <LoginForm />

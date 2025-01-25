@@ -3,54 +3,91 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import Link from "next/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
+const formSchema = z.object({
+  email: z.string().email({
+    message: "Зөв имэйл хаяг оруулна уу.",
+  }),
+  password: z.string().min(1, {
+    message: "Нууц үг оруулна уу.",
+  }),
+});
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
     setError("");
-
-    // Basic validation
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      return;
-    }
-
     // Here you would typically call your authentication API
-    console.log("Login attempt", { email, password });
-  };
+    console.log("Login attempt", values);
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="m@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Имэйл</FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="имэйл@example.com"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Нууц үг</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
-      {error && <p className="text-sm text-red-500">{error}</p>}
-      <Button type="submit" className="w-full">
-        Log in
-      </Button>
-    </form>
+        {error && <p className="text-sm text-red-500">{error}</p>}
+        <div className="flex items-center justify-between">
+          <Link
+            href="/forgot-password"
+            className="text-sm text-blue-600 hover:underline text-end w-full"
+          >
+            Нууц үгээ мартсан уу?
+          </Link>
+        </div>
+        <Button type="submit" className="w-full">
+          Нэвтрэх
+        </Button>
+      </form>
+    </Form>
   );
 }

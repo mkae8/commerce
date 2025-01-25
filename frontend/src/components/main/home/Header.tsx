@@ -19,7 +19,6 @@ import { VisuallyHidden } from "@/components/utils/visual-hidden";
 import { WishlistItem } from "@/components/utils/WishlistItem";
 import { CartItem } from "@/components/utils/CartItem";
 
-// Mock data for wishlist and cart
 const mockWishlistItems = [
   { id: "1", name: "Product 1", price: 19.99, image: "/product1.jpg" },
   { id: "2", name: "Product 2", price: 29.99, image: "/product2.jpg" },
@@ -43,10 +42,14 @@ const mockCartItems = [
 ];
 
 export const Header = () => {
-  const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [wishlistItems, setWishlistItems] = useState(mockWishlistItems);
   const [cartItems, setCartItems] = useState(mockCartItems);
+
+  const pathname = usePathname();
+  if (pathname === "/register" || pathname === "/sign-up") {
+    return null;
+  }
 
   const removeFromWishlist = (id: string) => {
     setWishlistItems(wishlistItems.filter((item) => item.id !== id));
@@ -195,7 +198,9 @@ export const Header = () => {
               </DialogContent>
             </Dialog>
             <Button variant="ghost" size="icon" aria-label="User Account">
-              <User className="h-5 w-5 hover:text-green-400 transition-colors" />
+              <Link href="/profile">
+                <User className="h-5 w-5 hover:text-green-400 transition-colors" />
+              </Link>
             </Button>
             <Sheet>
               <SheetTrigger asChild>
