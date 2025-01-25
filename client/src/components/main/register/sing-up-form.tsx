@@ -58,7 +58,7 @@ export default function SignUpForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 ">
         <FormField
           control={form.control}
           name="name"
@@ -133,7 +133,10 @@ export default function SignUpForm() {
           )}
         />
         {error && <p className="text-sm text-red-500">{error}</p>}
-        <Button type="submit" className="w-full">
+        <Button
+          type="submit"
+          className="w-full rounded-xl bg-white hover:bg-black hover:text-white "
+        >
           Бүртгүүлэх
         </Button>
       </form>

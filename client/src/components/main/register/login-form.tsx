@@ -79,12 +79,15 @@ export default function LoginForm() {
         <div className="flex items-center justify-between">
           <Link
             href="/forgot-password"
-            className="text-sm text-blue-600 hover:underline text-end w-full"
+            className="text-sm text-blue-500 hover:underline text-end w-full"
           >
             Нууц үгээ мартсан уу?
           </Link>
         </div>
-        <Button type="submit" className="w-full">
+        <Button
+          type="submit"
+          className="w-full rounded-xl bg-white hover:bg-black hover:text-white "
+        >
           Нэвтрэх
         </Button>
       </form>
