@@ -54,7 +54,7 @@ export default function LoginForm() {
               <FormControl>
                 <Input
                   type="email"
-                  placeholder="имэйл@example.com"
+                  placeholder="Имэйл@example.com"
                   {...field}
                 />
               </FormControl>
@@ -69,7 +69,11 @@ export default function LoginForm() {
             <FormItem>
               <FormLabel>Нууц үг</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input
+                  type="password"
+                  placeholder="Нууц үгээ оруулна уу"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
