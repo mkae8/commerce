@@ -6,7 +6,7 @@ export type UsersModelType = {
   email: string;
   password: string;
   phoneNumber: string;
-  image: string;
+  isAdmin: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -16,7 +16,7 @@ const UserSchema = new Schema<UsersModelType>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phoneNumber: { type: String, required: true },
-  image: { type: String, required: false },
+  isAdmin: { type: Boolean, required: false, default: false },
   createdAt: { type: Date, default: Date.now, required: true, immutable: true },
   updatedAt: { type: Date, default: Date.now, required: true },
 });

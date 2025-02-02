@@ -18,6 +18,8 @@ import Image from "next/image";
 import { VisuallyHidden } from "@/components/utils/visual-hidden";
 import { WishlistItem } from "@/components/utils/WishlistItem";
 import { CartItem } from "@/components/utils/CartItem";
+import { useUser } from "@/app/provider/UserProvider";
+import { useRouter } from "next/navigation";
 
 const mockWishlistItems = [
   { id: "1", name: "Product 1", price: 19.99, image: "/product1.jpg" },
@@ -45,11 +47,18 @@ export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [wishlistItems, setWishlistItems] = useState(mockWishlistItems);
   const [cartItems, setCartItems] = useState(mockCartItems);
+  const [clickedButton, setClickedButton] = useState<string | null>(null);
+  const { isLoggedIn } = useUser();
+  const router = useRouter();
 
   const pathname = usePathname();
   if (pathname === "/register" || pathname === "/sign-up") {
     return null;
   }
+  const handleUserClick = () => {
+    router.push(isLoggedIn ? "/profile" : "/register");
+    setClickedButton(isLoggedIn ? "Хэрэглэгч" : null);
+  };
 
   const removeFromWishlist = (id: string) => {
     setWishlistItems(wishlistItems.filter((item) => item.id !== id));
@@ -197,11 +206,17 @@ export const Header = () => {
                 )}
               </DialogContent>
             </Dialog>
-            <Button variant="ghost" size="icon" aria-label="User Account">
-              <Link href="/profile">
-                <User className="h-5 w-5 hover:text-green-400 transition-colors" />
-              </Link>
+
+            <Button
+              onClick={handleUserClick}
+              aria-label={isLoggedIn ? "User Profile" : "Login"}
+              style={{
+                color: clickedButton !== "Хэрэглэгч" ? "black" : "#18ba51",
+              }}
+            >
+              <User /> {isLoggedIn ? "Хэрэглэгч" : "Нэвтрэх"}
             </Button>
+
             <Sheet>
               <SheetTrigger asChild>
                 <Button

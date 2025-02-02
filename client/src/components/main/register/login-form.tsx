@@ -16,17 +16,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { useRouter } from "next/navigation";
+import { useUser } from "@/app/provider/UserProvider";
+
 const formSchema = z.object({
   email: z.string().email({
     message: "Зөв имэйл хаяг оруулна уу.",
   }),
-  password: z.string().min(1, {
-    message: "Нууц үг оруулна уу.",
+  password: z.string().min(8, {
+    message: "Нууц үг хамгийн багадаа 8 тэмдэгт байх ёстой.",
   }),
 });
 
-export default function LoginForm() {
+export const LoginForm = () => {
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,11 +41,21 @@ export default function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const { loginHandler } = useUser();
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setError("");
-    // Here you would typically call your authentication API
-    console.log("Login attempt", values);
-  }
+    setIsLoading(true);
+    try {
+      await loginHandler(values.email, values.password);
+      form.reset();
+      router.push("/");
+    } catch {
+      setError("Нэвтрэх явцад алдаа гарлаа. Дахин оролдоно уу");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -90,11 +105,12 @@ export default function LoginForm() {
         </div>
         <Button
           type="submit"
-          className="w-full rounded-xl bg-white hover:bg-black hover:text-white "
+          className="w-full rounded-xl bg-white hover:bg-black hover:text-white"
+          disabled={isLoading}
         >
-          Нэвтрэх
+          {isLoading ? "Түр хүлээнэ үү..." : "Нэвтрэх"}
         </Button>
       </form>
     </Form>
   );
-}
+};

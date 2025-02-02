@@ -3,100 +3,120 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
-import type { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import { toast } from "react-toastify";
 
 interface UserDetail {
-  name: string;
+  username: string;
   email: string;
+  phoneNumber?: string;
+  password?: string;
 }
 
-type UserContextType = {
+export type UserContextType = {
   loginHandler: (email: string, password: string) => Promise<void>;
   isLoggedIn: boolean;
   token: string;
   globalError: string;
-  userDetail: UserDetail | null;
-  logOut: () => void;
+  userDetail: UserDetail;
+  setUserDetail: (user: UserDetail) => void;
+  logOut: () => Promise<void>;
 };
 
 type LoginResponse = {
   token: string;
-  user: UserDetail;
+  user: {
+    username: string;
+    email: string;
+  };
 };
 
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
   const [token, setToken] = useState<string>("");
-  const [globalError, setGlobalError] = useState<string>("");
-  const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
+  const [error, setError] = useState<string>("");
+  const [userDetail, setUserDetail] = useState<UserDetail>({
+    username: "",
+    email: "",
+    phoneNumber: "",
+  });
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  const router = useRouter();
+  const { push } = useRouter();
 
   const loginHandler = async (
     email: string,
     password: string
   ): Promise<void> => {
-    if (typeof window === "undefined") return;
-
-    try {
-      if (!email || !password) {
-        setGlobalError("И-мэйл хаяг эсвэл нууц үгээ хийнэ үү");
-        return;
-      }
-      const result = await axios.post<LoginResponse>(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/login`,
-        {
-          email,
-          password,
+    if (typeof window !== "undefined") {
+      try {
+        if (!email || !password) {
+          setError("И-мэйл хаяг эсвэл нууц үгээ хийнэ үү");
+          throw new Error("И-мэйл хаяг эсвэл нууц үгээ хийнэ үү");
         }
-      );
 
-      window.localStorage.setItem("token", result.data.token);
-      setToken(result.data.token);
-      setIsLoggedIn(true);
-      setUserDetail(result.data.user);
-      router.push("/");
-      toast.success("Амжилттай нэвтэрлээ!");
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setGlobalError(
-          error.response.data.message || "Нэвтрэх явцад алдаа гарлаа."
+        const result = await axios.post<LoginResponse>(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/login`,
+          { email, password }
         );
-      } else {
-        setGlobalError("Нэвтрэх явцад алдаа гарлаа.");
+
+        window.localStorage.setItem("token", result.data.token);
+        setToken(result.data.token);
+        setIsLoggedIn(true);
+        setUserDetail(result.data.user);
+        push("/");
+        toast.success("Амжилттай нэвтэрлээ!");
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+          setError(
+            error.response.data?.message || "Нэвтрэх явцад алдаа гарлаа."
+          );
+        } else {
+          setError("Нэвтрэх явцад алдаа гарлаа.");
+        }
+        toast.error("Нэвтрэх явцад алдаа гарлаа.");
+        throw error;
       }
-      toast.error("Нэвтрэх явцад алдаа гарлаа.");
     }
   };
 
-  const logOut = () => {
-    if (typeof window === "undefined") return;
+  const logOut = async () => {
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.removeItem("token");
+        window.localStorage.removeItem("userDetail");
+        setToken("");
+        setIsLoggedIn(false);
+        setUserDetail({ username: "", email: "", phoneNumber: "" });
 
-    try {
-      window.localStorage.removeItem("token");
-      setToken("");
-      setIsLoggedIn(false);
-      setUserDetail(null);
-      router.push("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
+        if (isLoggedIn) {
+          push("/register");
+        }
+      } catch (error) {
+        console.log("Logout failed:", error);
+      }
     }
   };
-
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const storedToken = window.localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-      setIsLoggedIn(true);
-    } else {
-      router.push("/login");
+    if (typeof window !== "undefined") {
+      const storedToken = window.localStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+        setIsLoggedIn(true);
+      } else {
+        push("/register");
+      }
     }
-  }, [router]);
+  }, [push]);
+
+  const updateUserDetail = (user: UserDetail) => {
+    setUserDetail(user);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("userDetail", JSON.stringify(user));
+    }
+  };
+  console.log(updateUserDetail);
 
   return (
     <UserContext.Provider
@@ -105,7 +125,8 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
         isLoggedIn,
         token,
         userDetail,
-        globalError,
+        setUserDetail,
+        globalError: error,
         logOut,
       }}
     >

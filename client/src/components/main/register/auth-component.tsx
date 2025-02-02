@@ -10,8 +10,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import LoginForm from "./login-form";
+
 import { SignUpForm } from "./sing-up-form";
+import { LoginForm } from "./login-form";
 
 export default function AuthComponent() {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");

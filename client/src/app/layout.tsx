@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import { Header } from "../components/main/home/Header";
 import { Footer } from "@/components/main/home/Footer";
+import { UserProvider } from "./provider/UserProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ToastContainer />
-        <Header />
-        {children}
-        <Footer />
+        <UserProvider>
+          <Header />
+          {children}
+          <Footer />
+        </UserProvider>
       </body>
     </html>
   );
