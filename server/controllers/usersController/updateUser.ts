@@ -1,12 +1,12 @@
 import { UserModel } from "../../src/database/models/userModel";
 
-export const updateUser = async (req: any, res: any) => {
+export const updateUserData = async (req: any, res: any) => {
   const { userId } = res.locals;
-  const { username, email, phoneNumber, password } = req.body;
+  const { username, email, phoneNumber } = req.body;
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { username, email, phoneNumber, password },
+      { username, email, phoneNumber },
       { new: true, runValidators: true }
     ).select("-password");
 

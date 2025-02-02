@@ -102,7 +102,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
         setToken(storedToken);
         setIsLoggedIn(true);
       } else {
-        push("/register");
+        push("/");
       }
     }
   }, [push]);

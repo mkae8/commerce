@@ -22,7 +22,7 @@ const profileSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
-export default function EnhancedUserProfile() {
+export const UserProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { token, logOut, userDetail, setUserDetail } = useUser();
 
@@ -30,10 +30,11 @@ export default function EnhancedUserProfile() {
     register: registerProfile,
     handleSubmit: handleSubmitProfile,
     control: controlProfile,
-    formState: { errors: errorsProfile },
+    formState: { errors: errorsProfile, isValid },
     reset,
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
+    mode: "onChange",
     defaultValues: {
       username: userDetail?.username || "",
       email: userDetail?.email || "",
@@ -75,7 +76,7 @@ export default function EnhancedUserProfile() {
     fetchUserData();
   }, [token, setUserDetail]);
 
-  async function onSubmitProfile(data: ProfileFormValues) {
+  const onSubmitProfile = async (data: ProfileFormValues) => {
     setIsLoading(true);
     try {
       const response = await axios.put(
@@ -106,7 +107,7 @@ export default function EnhancedUserProfile() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -157,7 +158,15 @@ export default function EnhancedUserProfile() {
                   </p>
                 )}
               </div>
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                className={`w-full rounded-xl text-white ${
+                  isValid
+                    ? "bg-green-500 hover:bg-green-600"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
+                disabled={!isValid || isLoading}
+              >
                 {isLoading ? "Updating..." : "Update Profile"}
               </Button>
             </form>
@@ -166,10 +175,14 @@ export default function EnhancedUserProfile() {
             <PasswordUpdate />
           </TabsContent>
         </Tabs>
-        <Button onClick={logOut} className="w-full mt-4" variant="destructive">
+        <Button
+          onClick={logOut}
+          className="w-full mt-4 rounded-xl hover:bg-green-500 hover:text-white"
+          variant="destructive"
+        >
           Log Out
         </Button>
       </CardContent>
     </Card>
   );
-}
+};

@@ -1,10 +1,9 @@
-import EnhancedUserProfile from "@/components/profile/EnhancedUserProfile";
-
+import { UserProfile } from "@/components/profile/EnhancedUserProfile";
 
 const ProfilePage = () => {
   return (
     <div className="container mx-auto py-10">
-      <EnhancedUserProfile />
+      <UserProfile />
     </div>
   );
 };
