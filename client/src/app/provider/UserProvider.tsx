@@ -69,13 +69,10 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
         toast.success("Амжилттай нэвтэрлээ!");
       } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
-          setError(
-            error.response.data?.message || "Нэвтрэх явцад алдаа гарлаа."
-          );
+          setError(error.response.data?.message);
         } else {
           setError("Нэвтрэх явцад алдаа гарлаа.");
         }
-        toast.error("Нэвтрэх явцад алдаа гарлаа.");
         throw error;
       }
     }
@@ -91,7 +88,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
         setUserDetail({ username: "", email: "", phoneNumber: "" });
 
         if (isLoggedIn) {
-          push("/register");
+          push("/");
         }
       } catch (error) {
         console.log("Logout failed:", error);

@@ -18,6 +18,7 @@ import * as z from "zod";
 
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/provider/UserProvider";
+import { toast } from "react-toastify";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -51,7 +52,7 @@ export const LoginForm = () => {
       form.reset();
       router.push("/");
     } catch {
-      setError("Нэвтрэх явцад алдаа гарлаа. Дахин оролдоно уу");
+      toast.error("Email or password is not match");
     } finally {
       setIsLoading(false);
     }

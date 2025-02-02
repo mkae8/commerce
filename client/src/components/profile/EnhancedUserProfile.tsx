@@ -9,15 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import { PasswordUpdate } from "./PasswordUpdate";
-
 import axios from "axios";
 import { useUser } from "@/app/provider/UserProvider";
 import { toast } from "react-toastify";
 
 const profileSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  username: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phoneNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Invalid phone number"),
 });
@@ -26,7 +24,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function EnhancedUserProfile() {
   const [isLoading, setIsLoading] = useState(false);
-  const { token, logOut, userDetail, setUserDetail = () => {} } = useUser();
+  const { token, logOut, userDetail, setUserDetail } = useUser();
 
   const {
     register: registerProfile,
@@ -37,7 +35,7 @@ export default function EnhancedUserProfile() {
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: userDetail?.username || "",
+      username: userDetail?.username || "",
       email: userDetail?.email || "",
       phoneNumber: userDetail?.phoneNumber || "",
     },
@@ -46,7 +44,7 @@ export default function EnhancedUserProfile() {
   useEffect(() => {
     if (userDetail) {
       reset({
-        name: userDetail.username || "",
+        username: userDetail.username || "",
         email: userDetail.email || "",
         phoneNumber: userDetail.phoneNumber || "",
       });
@@ -55,12 +53,7 @@ export default function EnhancedUserProfile() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      let token;
-      if (typeof window !== "undefined") {
-        token = window.localStorage.getItem("token");
-      }
       if (!token) {
-        toast.error("You need to be logged in to access profile information.");
         return;
       }
 
@@ -73,7 +66,6 @@ export default function EnhancedUserProfile() {
         );
         console.log(response.data);
         setUserDetail(response.data);
-        localStorage.setItem("userDetail", JSON.stringify(response.data));
       } catch (error) {
         console.log("Error fetching user data:", error);
         toast.error("Failed to load user data.");
@@ -81,7 +73,7 @@ export default function EnhancedUserProfile() {
     };
 
     fetchUserData();
-  }, [setUserDetail]);
+  }, [token, setUserDetail]);
 
   async function onSubmitProfile(data: ProfileFormValues) {
     setIsLoading(true);
@@ -95,12 +87,22 @@ export default function EnhancedUserProfile() {
           },
         }
       );
-      setUserDetail(response.data);
-      localStorage.setItem("userDetail", JSON.stringify(response.data));
-      toast.success("Profile updated successfully!");
+
+      if (response.data && response.data.user) {
+        setUserDetail(response.data.user);
+        toast.success("Profile updated successfully!");
+      } else {
+        throw new Error("Invalid response from server");
+      }
     } catch (error) {
       console.error("Failed to update profile:", error);
-      toast.error("Failed to update profile.");
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || "Failed to update profile"
+        );
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -125,11 +127,11 @@ export default function EnhancedUserProfile() {
               className="space-y-8"
             >
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" {...registerProfile("name")} />
-                {errorsProfile.name && (
+                <Label htmlFor="username">Name</Label>
+                <Input id="username" {...registerProfile("username")} />
+                {errorsProfile.username && (
                   <p className="text-sm text-red-500">
-                    {errorsProfile.name.message}
+                    {errorsProfile.username.message}
                   </p>
                 )}
               </div>
