@@ -10,7 +10,9 @@ export const signupController = async (req: any, res: any) => {
   try {
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ message: "Email already registered" });
+      return res
+        .status(409)
+        .send({ message: "Имэйл аль хэдийн бүртгэгдсэн байна" });
     }
     const hashedPassword = bcrypt.hashSync(password, 11);
     const newUser = await UserModel.create({
@@ -20,9 +22,9 @@ export const signupController = async (req: any, res: any) => {
       password: hashedPassword,
     });
 
-    res.status(201).json({ message: "User created successfully" });
+    res.status(201).send({ message: "Хэрэглэгчийг амжилттай үүсгэсэн" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    console.log(error);
+    res.status(500).send({ message: "Server error" });
   }
 };

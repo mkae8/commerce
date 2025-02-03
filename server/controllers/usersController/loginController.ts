@@ -28,9 +28,9 @@ export const loginController = async (req: any, res: any) => {
 
     res
       .status(200)
-      .send({ message: "Log in successful", token, user: userWithoutPassword });
+      .send({ message: "Амжилттай нэвтэрлээ", token, user: userWithoutPassword });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.status(500).send({ message: "Internal server error" });
   }
 };

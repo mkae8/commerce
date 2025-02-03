@@ -11,12 +11,12 @@ export const updateUserData = async (req: any, res: any) => {
     ).select("-password");
 
     if (!updatedUser) {
-      return res.status(404).send({ message: "User not found" });
+      return res.status(404).send({ message: "Хэрэглэгч олдсонгүй" });
     }
 
-    res.status(200).send({ message: "Update successful", user: updatedUser });
+    res.status(200).send({ message: "Шинэчлэлт амжилттай", user: updatedUser });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.status(400).send({ message: "Update failed", error });
   }
 };

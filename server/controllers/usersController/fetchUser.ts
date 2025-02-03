@@ -7,6 +7,6 @@ export const fetchUser = async (req: any, res: any) => {
     const user = await UserModel.findById(userId);
     res.status(200).send(user);
   } catch (error) {
-    res.status(500).send({ message: "Failed to fetch user" });
+    res.status(500).send({ message: "Хэрэглэгчийг дуудаж чадсангүй" });
   }
 };
