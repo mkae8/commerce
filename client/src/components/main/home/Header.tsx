@@ -52,7 +52,7 @@ export const Header = () => {
   const router = useRouter();
 
   const pathname = usePathname();
-  if (pathname === "/register" || pathname === "/sign-up") {
+  if (pathname === "/register" || pathname === "/forgot-password") {
     return null;
   }
   const handleUserClick = () => {
@@ -211,8 +211,9 @@ export const Header = () => {
               onClick={handleUserClick}
               aria-label={isLoggedIn ? "User Profile" : "Login"}
               style={{
-                color: clickedButton !== "Хэрэглэгч" ? "black" : "#18ba51",
+                color: clickedButton !== "Хэрэглэгч" ? "#000" : "#18ba51",
               }}
+              variant="ghost"
             >
               <User /> {isLoggedIn ? "Хэрэглэгч" : "Нэвтрэх"}
             </Button>

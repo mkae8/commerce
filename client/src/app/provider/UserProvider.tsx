@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import axios from "axios";
@@ -102,7 +103,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
         setToken(storedToken);
         setIsLoggedIn(true);
       } else {
-        push("/");
+        push("/register");
       }
     }
   }, [push]);
@@ -113,7 +114,6 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
       window.localStorage.setItem("userDetail", JSON.stringify(user));
     }
   };
-  console.log(updateUserDetail);
 
   return (
     <UserContext.Provider

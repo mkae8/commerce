@@ -12,3 +12,19 @@ body {
   padding: 0;
   margin: 0;
 }
+
+@keyframes pulse-scale {
+  0%,
+  100% {
+    transform: scale(0.5);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-pulse {
+  animation: pulse-scale 1.5s ease-in-out infinite;
+}

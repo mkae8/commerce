@@ -29,6 +29,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
     "framer-motion": "^11.18.0",
+    "input-otp": "^1.4.2",
     "isinview": "^2.2.1",
     "lucide-react": "^0.473.0",
     "motion": "^11.18.0",

@@ -69,7 +69,7 @@ export const UserProfile = () => {
         setUserDetail(response.data);
       } catch (error) {
         console.log("Error fetching user data:", error);
-        toast.error("Failed to load user data.");
+        toast.error("Хэрэглэгчийн өгөгдлийг ачаалж чадсангүй.");
       }
     };
 
@@ -91,18 +91,16 @@ export const UserProfile = () => {
 
       if (response.data && response.data.user) {
         setUserDetail(response.data.user);
-        toast.success("Profile updated successfully!");
+        toast.success("Профайлыг амжилттай шинэчлэгдлээ!");
       } else {
         throw new Error("Invalid response from server");
       }
     } catch (error) {
-      console.error("Failed to update profile:", error);
+      console.log("Failed to update profile:", error);
       if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message || "Failed to update profile"
-        );
+        toast.error(error.response?.data?.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error("Гэнэтийн алдаа гарлаа.");
       }
     } finally {
       setIsLoading(false);

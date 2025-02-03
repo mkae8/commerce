@@ -5,7 +5,6 @@ export function LocationSection() {
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-xl font-semibold">Location</h2>
-      <p className="text-sm opacity-70">Save $3 with App New User Only</p>
       <div className="flex items-center gap-4">
         <QrCode size={80} />
         <div className="flex flex-col gap-2">

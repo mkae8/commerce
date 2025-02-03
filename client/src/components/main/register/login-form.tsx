@@ -52,7 +52,7 @@ export const LoginForm = () => {
       form.reset();
       router.push("/");
     } catch {
-      toast.error("Email or password is not match");
+      toast.error("Имэйл эсвэл нууц үг таарахгүй байна");
     } finally {
       setIsLoading(false);
     }

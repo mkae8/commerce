@@ -65,17 +65,17 @@ export const PasswordUpdate = () => {
       );
 
       if (response.status === 200) {
-        toast.success("Password updated successfully");
+        toast.success("Нууц үг амжилттай шинэчлэгдлээ");
         reset();
       } else {
         throw new Error("Failed to update password");
       }
     } catch (error) {
-      console.error("Error updating password:", error);
+      console.log("Error updating password:", error);
       if (axios.isAxiosError(error) && error.response) {
-        toast.error(error.response.data.message || "Failed to update password");
+        toast.error(error.response.data.message);
       } else {
-        toast.error("An unexpected error occurred");
+        toast.error("Гэнэтийн алдаа гарлаа");
       }
     } finally {
       setIsLoading(false);

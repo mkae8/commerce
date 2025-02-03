@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
 import express from "express";
 import cors from "cors";
-
 import { UserModel } from "../../../src/database/models/userModel";
 import env from "dotenv";
 import { OtpModel } from "../../../src/database/models/otpModel";
@@ -42,24 +41,31 @@ const emailSender = async (
 
 export const sendEmailController = async (req: any, res: any) => {
   const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
   const OTP = Math.floor(1000 + Math.random() * 9000);
 
   try {
     const user = await UserModel.findOne({ email });
 
     if (!user) {
-      return res.status(404).send({ message: "Хэрэглэгч олдсонгүй" });
+      return res.status(404).json({ message: "Хэрэглэгч олдсонгүй" });
     }
 
-    const isThereData = await OtpModel.find({ email });
+    // Check if an OTP has already been sent
+    const existingOtp = await OtpModel.findOne({ email });
 
-    if (isThereData.length > 0) {
-      res.send("Already sent OTP");
-      return;
+    if (existingOtp) {
+      return res.status(400).json({ message: "OTP has already been sent" });
     }
 
+    // Save the OTP to the database
     await OtpModel.create({ email, otpCode: OTP });
 
+    // Send the OTP via email
     await emailSender(
       email,
       "Таны OTP нууц үг",
@@ -72,11 +78,13 @@ export const sendEmailController = async (req: any, res: any) => {
           <p style="font-size: 16px; margin-top: 20px;">Энэхүү OTP нь богино хугацаанд хүчинтэй. </p>
         </div>
       `,
-      "One Time Password"
+      `Your OTP is: ${OTP}`
     );
 
-    res.send("Имэйл илгээсэн").status(201);
+    // Send success response
+    res.status(201).json({ message: "Имэйл илгээсэн" });
   } catch (error) {
-    res.status(500).send("Failed to send email");
+    console.error("Error in sendEmailController:", error);
+    res.status(500).json({ message: "Failed to send email" });
   }
 };
