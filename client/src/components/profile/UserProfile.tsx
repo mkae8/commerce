@@ -54,9 +54,7 @@ export const UserProfile = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!token) {
-        return;
-      }
+      if (!token) return;
 
       try {
         const response = await axios.get(
@@ -65,10 +63,9 @@ export const UserProfile = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log(response.data);
         setUserDetail(response.data);
       } catch (error) {
-        console.log("Error fetching user data:", error);
+        console.error("Error fetching user data:", error);
         toast.error("Хэрэглэгчийн өгөгдлийг ачаалж чадсангүй.");
       }
     };

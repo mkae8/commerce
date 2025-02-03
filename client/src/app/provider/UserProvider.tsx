@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import axios from "axios";
@@ -11,109 +10,85 @@ interface UserDetail {
   username: string;
   email: string;
   phoneNumber?: string;
-  password?: string;
 }
 
 export type UserContextType = {
   loginHandler: (email: string, password: string) => Promise<void>;
   isLoggedIn: boolean;
-  token: string;
-  globalError: string;
-  userDetail: UserDetail;
+  token: string | null;
+  userDetail: UserDetail | null;
   setUserDetail: (user: UserDetail) => void;
-  logOut: () => Promise<void>;
+  logOut: () => void;
 };
 
 type LoginResponse = {
   token: string;
-  user: {
-    username: string;
-    email: string;
-  };
+  user: UserDetail;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
-  const [token, setToken] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [userDetail, setUserDetail] = useState<UserDetail>({
-    username: "",
-    email: "",
-    phoneNumber: "",
-  });
+  const [token, setToken] = useState<string | null>(null);
+  const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
   const { push } = useRouter();
+
+  // 🟢 LocalStorage-оос мэдээлэл сэргээх
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("userDetail");
+
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUserDetail(JSON.parse(storedUser));
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const loginHandler = async (
     email: string,
     password: string
   ): Promise<void> => {
-    if (typeof window !== "undefined") {
-      try {
-        if (!email || !password) {
-          setError("И-мэйл хаяг эсвэл нууц үгээ хийнэ үү");
-          throw new Error("И-мэйл хаяг эсвэл нууц үгээ хийнэ үү");
-        }
-
-        const result = await axios.post<LoginResponse>(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/login`,
-          { email, password }
-        );
-
-        window.localStorage.setItem("token", result.data.token);
-        setToken(result.data.token);
-        setIsLoggedIn(true);
-        setUserDetail(result.data.user);
-        push("/");
-        toast.success("Амжилттай нэвтэрлээ!");
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.response) {
-          setError(error.response.data?.message);
-        } else {
-          setError("Нэвтрэх явцад алдаа гарлаа.");
-        }
-        throw error;
+    try {
+      if (!email || !password) {
+        throw new Error("И-мэйл болон нууц үгээ оруулна уу.");
       }
+
+      const response = await axios.post<LoginResponse>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/login`,
+        { email, password }
+      );
+
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userDetail", JSON.stringify(response.data.user));
+
+      setToken(response.data.token);
+      setUserDetail(response.data.user);
+      setIsLoggedIn(true);
+      push("/");
+      toast.success("Амжилттай нэвтэрлээ!");
+    } catch (error) {
+      console.error("Нэвтрэхэд алдаа гарлаа:", error);
+      toast.error("Нэвтрэхэд алдаа гарлаа.");
     }
   };
 
-  const logOut = async () => {
-    if (typeof window !== "undefined") {
-      try {
-        window.localStorage.removeItem("token");
-        window.localStorage.removeItem("userDetail");
-        setToken("");
-        setIsLoggedIn(false);
-        setUserDetail({ username: "", email: "", phoneNumber: "" });
-
-        if (isLoggedIn) {
-          push("/");
-        }
-      } catch (error) {
-        console.log("Logout failed:", error);
-      }
-    }
+  const logOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userDetail");
+    setToken(null);
+    setUserDetail(null);
+    setIsLoggedIn(false);
+    push("/");
   };
+
+  // 🟢 Хэрэв хэрэглэгч нэвтэрсэн бол /register рүү орохоос сэргийлэх
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = window.localStorage.getItem("token");
-      if (storedToken) {
-        setToken(storedToken);
-        setIsLoggedIn(true);
-      } else {
-        push("/register");
-      }
+    if (isLoggedIn && window.location.pathname === "/register") {
+      push("/");
     }
-  }, [push]);
-
-  const updateUserDetail = (user: UserDetail) => {
-    setUserDetail(user);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("userDetail", JSON.stringify(user));
-    }
-  };
+  }, [isLoggedIn, push]);
 
   return (
     <UserContext.Provider
@@ -123,7 +98,6 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
         token,
         userDetail,
         setUserDetail,
-        globalError: error,
         logOut,
       }}
     >

@@ -1,4 +1,4 @@
-import { UserProfile } from "@/components/profile/EnhancedUserProfile";
+import { UserProfile } from "@/components/profile/UserProfile";
 
 const ProfilePage = () => {
   return (
