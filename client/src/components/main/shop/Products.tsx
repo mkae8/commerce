@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/common/ProductCard";
+import { Chip } from "@/components/utils/Chip";
 
 interface Product {
   id: number;
@@ -21,7 +22,7 @@ const productsData: Product[] = [
     name: "Mongolian Airlines Boeing 787",
     price: 2500,
     size: "47cm",
-    image: "/history/miat787.jpg",
+    image: "/787F.JPG",
     description: "A detailed description of the product.",
   },
   {
@@ -29,7 +30,7 @@ const productsData: Product[] = [
     name: "Mongolian Airlines Boeing 787",
     price: 2500,
     size: "47cm",
-    image: "/history/miat787.jpg",
+    image: "/787F.JPG",
     description: "A detailed description of the product.",
   },
   {
@@ -37,7 +38,7 @@ const productsData: Product[] = [
     name: "Mongolian Airlines Boeing 787",
     price: 2500,
     size: "47cm",
-    image: "/history/miat787.jpg",
+    image: "/787F.JPG",
     description: "A detailed description of the product.",
   },
   {
@@ -45,7 +46,7 @@ const productsData: Product[] = [
     name: "Mongolian Airlines Boeing 787",
     price: 2500,
     size: "47cm",
-    image: "/history/miat787.jpg",
+    image: "/787F.JPG",
     description: "A detailed description of the product.",
   },
   {
@@ -53,7 +54,7 @@ const productsData: Product[] = [
     name: "Mongolian Airlines Boeing 787",
     price: 2500,
     size: "47cm",
-    image: "/history/miat787.jpg",
+    image: "/787F.JPG",
     description: "A detailed description of the product.",
   },
   {
@@ -61,7 +62,7 @@ const productsData: Product[] = [
     name: "Mongolian Airlines Boeing 787",
     price: 2500,
     size: "47cm",
-    image: "/history/miat787.jpg",
+    image: "/787F.JPG",
     description: "A detailed description of the product.",
   },
   {
@@ -69,7 +70,7 @@ const productsData: Product[] = [
     name: "Mongolian Airlines Boeing 787",
     price: 2500,
     size: "47cm",
-    image: "/history/miat787.jpg",
+    image: "/787F.JPG",
     description: "A detailed description of the product.",
   },
   {
@@ -77,7 +78,7 @@ const productsData: Product[] = [
     name: "Mongolian Airlines Boeing 787",
     price: 2500,
     size: "47cm",
-    image: "/history/miat787.jpg",
+    image: "/787F.JPG",
     description: "A detailed description of the product.",
   },
   {
@@ -85,7 +86,7 @@ const productsData: Product[] = [
     name: "Mongolian Airlines Boeing 787",
     price: 2500,
     size: "47cm",
-    image: "/history/miat787.jpg",
+    image: "/787F.JPG",
     description: "A detailed description of the product.",
   },
 ];
@@ -107,8 +108,8 @@ export function Products() {
   };
 
   return (
-    <div className="w-full max-w-[925px] mx-auto">
-      <h2 className="text-3xl font-semibold mb-6">Products</h2>
+    <div className="w-full max-w-7xl mt-10">
+      <Chip title="Product" desc="Product" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />

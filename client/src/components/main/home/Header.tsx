@@ -100,6 +100,9 @@ export const Header = () => {
               <NavLink href="/contact" active={pathname === "/contact"}>
                 Contact
               </NavLink>
+              <NavLink href="/admin" active={pathname === "/admin"}>
+                Admin
+              </NavLink>
             </nav>
           </div>
           <div className="flex items-center space-x-4">
@@ -146,7 +149,7 @@ export const Header = () => {
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Favorites">
-                  <Heart className="h-5 w-5 hover:text-red-400 transition-colors" />
+                  <Heart style={{ width: "20px", height: "20px" }} />
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -170,7 +173,7 @@ export const Header = () => {
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Shopping Cart">
-                  <ShoppingCart className="h-5 w-5 hover:text-blue-400 transition-colors" />
+                  <ShoppingCart style={{ width: "20px", height: "20px" }} />
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -212,10 +215,12 @@ export const Header = () => {
               aria-label={isLoggedIn ? "User Profile" : "Login"}
               style={{
                 color: clickedButton !== "Хэрэглэгч" ? "#000" : "#000",
+                fontSize: "16px",
               }}
               variant="ghost"
             >
-              <User /> {isLoggedIn ? "Хэрэглэгч" : "Нэвтрэх"}
+              <User style={{ width: "20px", height: "20px" }} />{" "}
+              {isLoggedIn ? "Хэрэглэгч" : "Нэвтрэх"}
             </Button>
 
             <Sheet>
@@ -239,6 +244,9 @@ export const Header = () => {
                   </NavLink>
                   <NavLink href="/contact" active={pathname === "/contact"}>
                     Contact
+                  </NavLink>
+                  <NavLink href="/admin" active={pathname === "/admin"}>
+                    Admin
                   </NavLink>
                 </nav>
               </SheetContent>

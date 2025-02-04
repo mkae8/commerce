@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import type { Product } from "../types/ProductType";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface ProductCardProps {
   product: Product;
@@ -34,36 +35,44 @@ export function ProductCard({ product }: ProductCardProps) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative aspect-square">
-        <img
+        <Image
           src={product.image || "/placeholder.svg"}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          layout="fill"
+          objectFit="cover"
+          className="transition-transform duration-300 group-hover:scale-105"
         />
 
         <div
-          className={`absolute inset-0 bg-black/40 flex flex-col justify-between p-4 transition-opacity duration-300 ${
+          className={`absolute inset-0  flex flex-col justify-between p-4 transition-opacity duration-300 ${
             isHovered ? "opacity-100" : "opacity-0"
           }`}
         >
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end items-center gap-2">
             <Button
-              variant="secondary"
+              variant="ghost"
               size="icon"
-              className="h-8 w-8 bg-white/90 hover:bg-white"
+              className="h-10 w-10  bg-accent "
             >
-              <Heart className="h-4 w-4" />
+              <Heart
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  color: "white",
+                }}
+              />
             </Button>
             <Button
-              variant="secondary"
+              variant="ghost"
               size="icon"
-              className="h-8 w-8 bg-white/90 hover:bg-white"
+              className="h-[50px] w-[50px]"
               onClick={handleViewProduct}
             >
-              <Eye className="h-4 w-4" />
+              <Eye style={{ width: "20px", height: "20px", color: "white" }} />
             </Button>
           </div>
           <Button
-            className="w-full bg-white text-black hover:bg-white/90"
+            className="w-full bg-green-400 text-black hover:text-white hover:bg-green-600"
             size="sm"
           >
             <ShoppingCart className="h-4 w-4 mr-2" />
