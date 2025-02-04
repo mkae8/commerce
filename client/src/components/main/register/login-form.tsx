@@ -36,6 +36,7 @@ export const LoginForm = () => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
@@ -106,8 +107,12 @@ export const LoginForm = () => {
         </div>
         <Button
           type="submit"
-          className="w-full rounded-xl bg-white hover:bg-black hover:text-white"
-          disabled={isLoading}
+          className={`w-full rounded-xl text-white ${
+            form.formState.isValid
+              ? "bg-green-500 hover:bg-green-600"
+              : "bg-gray-400 cursor-not-allowed"
+          }`}
+          disabled={!form.formState.isValid || isLoading}
         >
           {isLoading ? "Түр хүлээнэ үү..." : "Нэвтрэх"}
         </Button>

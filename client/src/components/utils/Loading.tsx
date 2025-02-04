@@ -5,7 +5,7 @@ export const Loading = () => {
         {[...Array(9)].map((_, i) => (
           <div
             key={i}
-            className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"
+            className="w-3 h-3 bg-green-400 rounded-full animate-pulse"
             style={{ animationDelay: `${i * 0.1}s` }}
           ></div>
         ))}

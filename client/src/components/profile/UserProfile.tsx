@@ -95,7 +95,7 @@ export const UserProfile = () => {
     } catch (error) {
       console.log("Failed to update profile:", error);
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message);
+        toast.success("Logged out");
       } else {
         toast.error("Гэнэтийн алдаа гарлаа.");
       }
@@ -153,30 +153,31 @@ export const UserProfile = () => {
                   </p>
                 )}
               </div>
-              <Button
-                type="submit"
-                className={`w-full rounded-xl text-white ${
-                  isValid
-                    ? "bg-green-500 hover:bg-green-600"
-                    : "bg-gray-400 cursor-not-allowed"
-                }`}
-                disabled={!isValid || isLoading}
-              >
-                {isLoading ? "Updating..." : "Update Profile"}
-              </Button>
+              <div className="flex justify-between items-center">
+                <Button
+                  type="submit"
+                  className={`w-1/3 rounded-xl text-white ${
+                    isValid
+                      ? "bg-green-500 hover:bg-green-600"
+                      : "bg-gray-400 cursor-not-allowed"
+                  }`}
+                  disabled={!isValid || isLoading}
+                >
+                  {isLoading ? "Updating..." : "Update Profile"}
+                </Button>
+                <Button
+                  onClick={logOut}
+                  className="w-1/3 mt-4 rounded-xl  text-red-500 hover:text-red-500 "
+                >
+                  Log Out
+                </Button>
+              </div>
             </form>
           </TabsContent>
           <TabsContent value="password">
             <PasswordUpdate />
           </TabsContent>
         </Tabs>
-        <Button
-          onClick={logOut}
-          className="w-full mt-4 rounded-xl hover:bg-green-500 hover:text-white"
-          variant="destructive"
-        >
-          Log Out
-        </Button>
       </CardContent>
     </Card>
   );

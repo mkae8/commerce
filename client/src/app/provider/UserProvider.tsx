@@ -34,7 +34,6 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const { push } = useRouter();
 
-  // 🟢 LocalStorage-оос мэдээлэл сэргээх
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("userDetail");
@@ -66,11 +65,18 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
       setToken(response.data.token);
       setUserDetail(response.data.user);
       setIsLoggedIn(true);
-      push("/");
+
       toast.success("Амжилттай нэвтэрлээ!");
     } catch (error) {
-      console.error("Нэвтрэхэд алдаа гарлаа:", error);
-      toast.error("Нэвтрэхэд алдаа гарлаа.");
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          throw new Error("Имэйл эсвэл нууц үг буруу байна.");
+        } else {
+          throw new Error("Серверийн алдаа гарлаа. Дараа дахин оролдоно уу.");
+        }
+      } else {
+        throw new Error("Алдаа гарлаа. Дараа дахин оролдоно уу.");
+      }
     }
   };
 
