@@ -11,7 +11,7 @@ interface ProductCardProps {
   product: Product;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export const ProductCard = ({ product }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
 
@@ -90,4 +90,4 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
     </div>
   );
-}
+};

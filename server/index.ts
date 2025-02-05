@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 
 import userRouter from "./routers/users/userRouter";
+import productRouter from "./routers/products/productRouter";
+import categoryRouter from "./routers/categories/categoryRouter";
 
 import { connectDataBase } from "./src/database/config";
 
@@ -11,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 connectDataBase();
 
-app.use("/", userRouter);
+app.use("/", userRouter, productRouter, categoryRouter);
 
 app.listen(port, () => {
   console.log(`🚀 Server nee deer asna --> http://localhost:${port}`);
