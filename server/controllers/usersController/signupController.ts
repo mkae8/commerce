@@ -22,7 +22,9 @@ export const signupController = async (req: any, res: any) => {
       password: hashedPassword,
     });
 
-    res.status(201).send({ message: "Хэрэглэгчийг амжилттай үүсгэсэн" });
+    res
+      .status(201)
+      .send({ message: "Хэрэглэгчийг амжилттай үүсгэсэн", newUser });
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Server error" });

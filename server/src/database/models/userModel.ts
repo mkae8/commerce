@@ -1,6 +1,6 @@
 import { Model, Schema, models, model } from "mongoose";
 
-export type UsersModelType = {
+export type UserModelType = {
   _id: Schema.Types.ObjectId;
   username: string;
   email: string;
@@ -11,7 +11,7 @@ export type UsersModelType = {
   updatedAt: Date;
 };
 
-const UserSchema = new Schema<UsersModelType>({
+const UserSchema = new Schema<UserModelType>({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -21,5 +21,5 @@ const UserSchema = new Schema<UsersModelType>({
   updatedAt: { type: Date, default: Date.now, required: true },
 });
 
-export const UserModel: Model<UsersModelType> =
-  models["Users"] || model<UsersModelType>("Users", UserSchema);
+export const UserModel: Model<UserModelType> =
+  models["Users"] || model<UserModelType>("Users", UserSchema);
