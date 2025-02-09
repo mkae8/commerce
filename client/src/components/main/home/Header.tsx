@@ -101,7 +101,10 @@ export const Header = () => {
               <NavLink href="/contact" active={pathname === "/contact"}>
                 Contact
               </NavLink>
-              <NavLink href="/admin" active={pathname === "/admin"}>
+              <NavLink
+                href="/admin/product"
+                active={pathname === "/admin/product"}
+              >
                 Admin
               </NavLink>
             </nav>
@@ -246,7 +249,10 @@ export const Header = () => {
                   <NavLink href="/contact" active={pathname === "/contact"}>
                     Contact
                   </NavLink>
-                  <NavLink href="/admin" active={pathname === "/admin"}>
+                  <NavLink
+                    href="/admin/product"
+                    active={pathname === "/admin/product"}
+                  >
                     Admin
                   </NavLink>
                 </nav>

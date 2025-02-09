@@ -87,9 +87,9 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     setUserDetail(null);
     setIsLoggedIn(false);
     push("/");
+    toast.success("Successfully logged out");
   };
 
-  // 🟢 Хэрэв хэрэглэгч нэвтэрсэн бол /register рүү орохоос сэргийлэх
   useEffect(() => {
     if (isLoggedIn && window.location.pathname === "/register") {
       push("/");
