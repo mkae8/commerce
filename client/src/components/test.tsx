@@ -1,16 +1,13 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import type React from "react";
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { Size } from "../types/ProductType";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import axios from "axios";
 import Image from "next/image";
-import { PlusCircle, X, Loader2 } from "lucide-react";
+import { PlusCircle, X } from "lucide-react";
 import { Button } from "../ui/button";
-import { toast } from "react-toastify";
 
 type Category = {
   _id: string;
@@ -29,107 +26,63 @@ export function ProductForm() {
     productCategory: "",
   });
 
-  const [uploadImages, setUploadImages] = useState<(File | null)[]>([null]);
-  const [images, setImages] = useState<(string | null)[]>([null]);
+  const [uploadImages, setUploadImages] = useState<(File | null)[]>([]);
+  const [images, setImages] = useState<(string | null)[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const getCategories = async () => {
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/fetchCategories`
       );
-      console.log("Fetched Categories:", res.data);
-
-      if (res.data.availableCategories) {
-        setCategories(res.data.availableCategories);
-      } else {
-        console.error("No available categories found");
-      }
+      setCategories(res.data);
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.log(error);
     }
   };
 
   useEffect(() => {
     getCategories();
-  }, []); //Fixed useEffect dependency issue
+  }, []);
 
-  const handleUpload = async () => {
-    const filteredUploadImages = uploadImages.filter((image) => !!image);
-    const { data } = await axios.get<{
-      uploadUrl: string[];
-      accessUrls: string[];
-    }>(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/image/${filteredUploadImages.length}`
-    );
-    console.log(data);
-
-    const uploadUrls = data.uploadUrl;
-    const imageArray = data.accessUrls;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
     try {
+      const filteredUploadImages = uploadImages.filter((image) => !!image);
+      const { data } = await axios.get<{
+        uploadUrl: string[];
+        accessUrls: string[];
+      }>(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/image/${filteredUploadImages.length}`
+      );
+
+      const { uploadUrl, accessUrls } = data;
+
       await Promise.all(
-        uploadUrls.map(async (uploadUrl: string, index: number) => {
-          await axios.put(uploadUrl, filteredUploadImages[index], {
+        uploadUrl.map(async (url, index) => {
+          await axios.put(url, filteredUploadImages[index], {
             headers: {
               "Content-Type": filteredUploadImages[index]?.type,
             },
           });
         })
       );
-      console.log("Uploaded image URLs:", imageArray);
-      return imageArray;
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      return [];
-    }
-  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const accessUrls = await handleUpload();
-      const filteredUploadImages = uploadImages.filter(
-        (image) => image !== null
-      );
+      setProduct((prev) => ({
+        ...prev,
+        image: accessUrls,
+      }));
 
-      if (filteredUploadImages.length > 0) {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/product/create`,
-          {
-            ...product,
-            image: accessUrls,
-          }
-        );
-        console.log("Product created:", response.data);
-        toast.success("Product created successfully!");
-        resetForm();
-      } else {
-        toast.error("Please upload at least one image.");
-      }
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/createProduct`, {
+        ...product,
+        image: accessUrls,
+      });
+
+      console.log("Product created successfully!");
     } catch (error) {
       console.error("Error submitting product:", error);
-      toast.error("Failed to create product. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
-  };
-
-  const resetForm = () => {
-    setProduct({
-      productName: "",
-      airline: "",
-      description: "",
-      price: "",
-      image: [""],
-      size: Size.Small,
-      productCategory: "",
-    });
-    setUploadImages([null]);
-    setImages([null]);
   };
 
   const handleChange = (
@@ -153,30 +106,18 @@ export function ProductForm() {
         const newImages = [...images];
         newImages[index] = URL.createObjectURL(file);
         setImages(newImages);
-
-        if (index === images.length - 1) {
-          setUploadImages((prev) => [...prev, null]);
-          setImages((prev) => [...prev, null]);
-        }
       }
     };
 
   const onImageRemove = (index: number) => {
-    setImages((prev) => {
-      const newImages = [...prev];
-      newImages.splice(index, 1);
-      return newImages;
-    });
-    setUploadImages((prev) => {
-      const newUploadImages = [...prev];
+    const newImages = [...images];
+    newImages[index] = null;
+    setImages(newImages);
+    setUploadImages((prevUploadImages) => {
+      const newUploadImages = [...prevUploadImages];
       newUploadImages.splice(index, 1);
       return newUploadImages;
     });
-
-    if (images.length === 1) {
-      setUploadImages([null]);
-      setImages([null]);
-    }
   };
 
   return (
@@ -239,14 +180,12 @@ export function ProductForm() {
           Price
         </label>
         <Input
-          type="number"
+          type="text"
           id="price"
           name="price"
           value={product.price}
           onChange={handleChange}
           required
-          min="0"
-          step="0.01"
           className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         />
       </div>
@@ -262,7 +201,7 @@ export function ProductForm() {
               />
               {image ? (
                 <Image
-                  src={image || "/placeholder.svg"}
+                  src={image}
                   alt={`Uploaded image ${index + 1}`}
                   fill
                   className="object-cover"
@@ -326,24 +265,19 @@ export function ProductForm() {
           className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         >
           <option value="">Select a category</option>
-          {Array.isArray(categories) &&
-            categories.map((category) => (
-              <option key={category._id} value={category._id}>
-                {category.categoryLabel}
-              </option>
-            ))}
+          {categories.map((category) => (
+            <option key={category._id} value={category._id}>
+              {category.categoryLabel}
+            </option>
+          ))}
         </select>
       </div>
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Creating Product...
-          </>
-        ) : (
-          "Create Product"
-        )}
-      </Button>
+      <button
+        type="submit"
+        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+      >
+        Create Product
+      </button>
     </form>
   );
 }

@@ -1,18 +1,21 @@
 import { UserModel } from "../../src/database/models/userModel";
 import bcrypt from "bcrypt";
 import env from "dotenv";
+import { Request, Response } from "express";
 
 env.config();
 
-export const signupController = async (req: any, res: any) => {
+export const signupController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { username, email, phoneNumber, password } = req.body;
 
   try {
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
-      return res
-        .status(409)
-        .send({ message: "Имэйл аль хэдийн бүртгэгдсэн байна" });
+      res.status(409).send({ message: "Имэйл аль хэдийн бүртгэгдсэн байна" });
+      return;
     }
     const hashedPassword = bcrypt.hashSync(password, 11);
     const newUser = await UserModel.create({
