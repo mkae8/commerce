@@ -65,8 +65,8 @@ export const UserProfile = () => {
         );
         setUserDetail(response.data);
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        toast.error("Хэрэглэгчийн өгөгдлийг ачаалж чадсангүй.");
+        console.log("Error fetching user data:", error);
+        toast.error("Failed to load user data.");
       }
     };
 
@@ -88,16 +88,20 @@ export const UserProfile = () => {
 
       if (response.data && response.data.user) {
         setUserDetail(response.data.user);
-        toast.success("Профайлыг амжилттай шинэчлэгдлээ!");
+        toast.success("Profile updated successfully!");
       } else {
         throw new Error("Invalid response from server");
       }
     } catch (error) {
       console.log("Failed to update profile:", error);
       if (axios.isAxiosError(error)) {
-        toast.success("Logged out");
+        if (error.response?.status === 400) {
+          toast.error(error.response.data.message || "Update failed");
+        } else {
+          toast.error("An unexpected error occurred.");
+        }
       } else {
-        toast.error("Гэнэтийн алдаа гарлаа.");
+        toast.error("An unexpected error occurred.");
       }
     } finally {
       setIsLoading(false);
@@ -153,10 +157,13 @@ export const UserProfile = () => {
                   </p>
                 )}
               </div>
-              <div className="flex justify-between items-center">
+              <div
+                className="flex justify-center
+               items-center "
+              >
                 <Button
                   type="submit"
-                  className={`w-1/3 rounded-xl text-white ${
+                  className={`w-2/3 rounded-xl text-white ${
                     isValid
                       ? "bg-green-500 hover:bg-green-600"
                       : "bg-gray-400 cursor-not-allowed"
@@ -165,14 +172,19 @@ export const UserProfile = () => {
                 >
                   {isLoading ? "Updating..." : "Update Profile"}
                 </Button>
-                <Button
-                  onClick={logOut}
-                  className="w-1/3 mt-4 rounded-xl  text-red-500 hover:text-red-500 "
-                >
-                  Log Out
-                </Button>
               </div>
             </form>
+            <div
+              className="flex justify-center
+               items-center "
+            >
+              <Button
+                onClick={logOut}
+                className="w-2/3 mt-4 rounded-xl text-red-500 hover:text-red-500"
+              >
+                Log Out
+              </Button>
+            </div>
           </TabsContent>
           <TabsContent value="password">
             <PasswordUpdate />

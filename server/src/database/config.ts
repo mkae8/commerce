@@ -9,5 +9,6 @@ export const connectDataBase = async () => {
     await connect(URL);
   } catch (err) {
     console.log("Database holboltodd aldaa garlaa");
+    console.log(err);
   }
 };

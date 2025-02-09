@@ -56,6 +56,7 @@ export const Header = () => {
     return null;
   }
   const handleUserClick = () => {
+    console.log("Navigating to:", isLoggedIn ? "/profile" : "/register");
     router.push(isLoggedIn ? "/profile" : "/register");
     setClickedButton(isLoggedIn ? "Хэрэглэгч" : null);
   };
