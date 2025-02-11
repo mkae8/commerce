@@ -6,7 +6,9 @@ export const fetchProducts = async (
   res: Response
 ): Promise<void> => {
   try {
-    const products = await ProductModel.find();
+    const products = await ProductModel.find()
+      .populate("productCategory", "categoryName")
+      .sort({ createdAt: -1 });
     if (!products.length) {
       res.status(404).send({ message: "No products found" });
       return;

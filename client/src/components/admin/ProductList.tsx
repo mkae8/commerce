@@ -7,6 +7,7 @@ import axios from "axios";
 import { Loading } from "../utils/Loading";
 import { Trash2, Edit } from "lucide-react";
 
+
 export type ProductType = {
   _id: string;
   productName: string;
@@ -15,12 +16,18 @@ export type ProductType = {
   price: string;
   image: string[];
   size: string;
-  productCategory: string;
+  productCategory: {
+    categoryName: string;
+  };
 };
 
 export const ProductList = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+
+
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -70,7 +77,7 @@ export const ProductList = () => {
           className="border p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
         >
           <div className="flex gap-4">
-            <div className="w-24 h-24 relative flex-shrink-0">
+            <div className="w-24 h-24 flex justify-center items-center">
               <img
                 src={
                   product.image && product.image.length > 0
@@ -78,7 +85,7 @@ export const ProductList = () => {
                     : "/placeholder.svg?height=300&width=300"
                 }
                 alt={product.productName}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
             <div className="flex-grow">
@@ -92,9 +99,11 @@ export const ProductList = () => {
                   </p>
                   <p className="text-sm text-gray-600">Size: {product.size}</p>
                   <p className="text-sm text-gray-600">
-                    Category: {product.productCategory}
+                    Category: {product.productCategory.categoryName}
                   </p>
-                  <p className="mt-2 text-sm">{product.description}</p>
+                  <p className="mt-2 text-sm">
+                    Description: {product.description}
+                  </p>
                 </div>
                 <p className="text-xl font-bold">${product.price}</p>
               </div>

@@ -40,7 +40,7 @@ export async function getPresignedUrl(count: string) {
   return {
     uploadUrl: response,
     accessUrls: keys.map(
-      (key) => `https://pub-621a10d0ad4d40c3a7e7887d77db3da6.r2.dev/${key}` // "/" нэмсэн
+      (key) => `https://pub-621a10d0ad4d40c3a7e7887d77db3da6.r2.dev/${key}`
     ),
   };
 }
