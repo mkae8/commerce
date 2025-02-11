@@ -41,7 +41,6 @@ export function ProductForm() {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/fetchCategories`
       );
-      console.log("Fetched Categories:", res.data);
 
       if (res.data.availableCategories) {
         setCategories(res.data.availableCategories);
@@ -49,13 +48,13 @@ export function ProductForm() {
         console.error("No available categories found");
       }
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.log("Error fetching categories:", error);
     }
   };
 
   useEffect(() => {
     getCategories();
-  }, [getCategories]);
+  }, []);
 
   const handleUpload = async () => {
     const filteredUploadImages = uploadImages.filter((image) => !!image);
@@ -189,7 +188,7 @@ export function ProductForm() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-4xl mx-auto p-6 bg-white rounded-2xl shadow-xl"
+      className=" p-6 bg-white rounded-2xl shadow-xl"
       // bg-gradient-to-br from-purple-50 to-indigo-50
     >
       <h2 className="text-3xl font-bold text-center mb-8 ">Create Product</h2>

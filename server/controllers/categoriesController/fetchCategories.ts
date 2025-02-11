@@ -14,6 +14,7 @@ export const fetchCategories = async (
     res
       .status(200)
       .send({ message: "Successfully fetch categories", availableCategories });
+    return;
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Failed" });
