@@ -6,7 +6,7 @@ import { NewsletterSection } from "@/components/utils/NewsletterSection";
 import { SupportSection } from "@/components/utils/SupportSection";
 import { usePathname } from "next/navigation";
 
-export function Footer() {
+export const Footer = () => {
   const pathname = usePathname();
   if (pathname === "/register" || pathname === "/forgot-password") {
     return null;
@@ -23,4 +23,4 @@ export function Footer() {
       </div>
     </footer>
   );
-}
+};

@@ -14,9 +14,8 @@ export const fetchProducts = async (
       return;
     }
     res.status(200).send(products);
-    return;
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.status(500).send({ message: "Server error" });
   }
 };

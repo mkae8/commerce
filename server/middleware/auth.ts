@@ -26,7 +26,8 @@ export const authMiddleware = async (
     process.env.SECRET as string,
     (err: any, decoded: any) => {
       if (err) {
-        return res.status(401).send({ message: err.message });
+        res.status(401).send({ message: err.message });
+        return;
       } else {
         res.locals.userId = decoded.id;
         next();

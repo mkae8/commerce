@@ -191,7 +191,9 @@ export function ProductForm() {
       className=" p-6 bg-white rounded-2xl shadow-xl"
       // bg-gradient-to-br from-purple-50 to-indigo-50
     >
-      <h2 className="text-3xl font-bold text-center mb-8 ">Create Product</h2>
+      <h2 className="text-2xl font-semibold text-start mb-8 ">
+        Create Product
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
