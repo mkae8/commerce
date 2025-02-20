@@ -5,7 +5,7 @@ export const deleteProduct = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { id } = req.params; 
+  const { id } = req.params;
   if (!id) {
     res.status(400).send({ message: "Id is required" });
     return;
